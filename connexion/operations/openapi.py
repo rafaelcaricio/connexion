@@ -12,13 +12,6 @@ from ..utils import deep_get, is_null, is_nullable, make_type
 
 logger = logging.getLogger("connexion.operations.openapi3")
 
-QUERY_STRING_DELIMITERS = {
-    'spaceDelimited': ' ',
-    'pipeDelimited': '|',
-    'simple': ',',
-    'form': ','
-}
-
 
 class OpenAPIOperation(AbstractOperation):
 
