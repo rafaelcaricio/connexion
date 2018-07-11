@@ -177,6 +177,8 @@ class OpenAPIOperation(AbstractOperation):
         return self._definitions_map
 
     def _validate_defaults(self):
+        # TODO also validate requestBody defaults
+        # TODO this should be upstreamed into openapi-spec-validator
         for param_defn in self.parameters:
             try:
                 param_schema = param_defn["schema"]
