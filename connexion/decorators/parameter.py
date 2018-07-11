@@ -72,12 +72,12 @@ def parameter_to_arg(operation, function, pythonic_params=False):
     """
     consumes = operation.consumes
 
-    def pythonic(name):
-        name = name and snake_and_shadow(name)
-        return name and re.sub('^[^a-zA-Z_]+', '', re.sub('[^0-9a-zA-Z_]', '', name))
-
     def sanitized(name):
         return name and re.sub('^[^a-zA-Z_]+', '', re.sub('[^0-9a-zA-Z_]', '', name))
+
+    def pythonic(name):
+        name = name and snake_and_shadow(name)
+        return sanitized(name)
 
     sanitize = pythonic if pythonic_params else sanitized
     arguments, has_kwargs = inspect_function_arguments(function)
