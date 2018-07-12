@@ -90,6 +90,7 @@ class OpenAPIOperation(AbstractOperation):
         self._definitions_map = {
             'components': {
                 'schemas': component_get('schemas'),
+                'examples': component_get('examples'),
                 'requestBodies': component_get('requestBodies'),
                 'parameters': component_get('parameters'),
                 'securitySchemes': component_get('securitySchemes'),
@@ -126,8 +127,8 @@ class OpenAPIOperation(AbstractOperation):
                 for mimetype, resp in content.items():
                     # check components/examples
                     examples = resp.get("examples", {})
-                    for _, example in examples.items():
-                        example = self._resolve_reference(example)
+                    examples = {k: self._resolve_reference(v)
+                                for k, v in examples.items()}
 
                     example = resp.get("example", {})
                     ref = self._resolve_reference(example)

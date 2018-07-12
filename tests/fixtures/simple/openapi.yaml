@@ -543,8 +543,7 @@ paths:
                 type: string
               examples:
                 justAnExample:
-                  summary: a basic example.
-                  value: Good evening, doctor.
+                  $ref: '#/components/examples/justAnExample'
       parameters:
         - name: name
           in: path
@@ -852,6 +851,10 @@ components:
                 type: string
       description: Just a testing parameter in the body
       required: true
+  examples:
+    justAnExample:
+      summary: a basic example.
+      value: Good evening, doctor.
   schemas:
     new_stack:
       type: object
