@@ -86,7 +86,7 @@ class AbstractURIParser(BaseDecorator):
             if not resolve_duplicates:
                 values = [values]
 
-            if (param_schema is not None and param_schema['type'] == 'array'):
+            if param_schema is not None and param_schema.get('type', '') == 'array':
                 # resolve variable re-assignment, handle explode
                 values = self._resolve_param_duplicates(values, param_defn)
                 # handle array styles

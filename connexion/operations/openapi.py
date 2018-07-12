@@ -1,4 +1,5 @@
 import logging
+import codecs
 from copy import deepcopy
 
 from jsonschema import ValidationError
@@ -96,6 +97,7 @@ class OpenAPIOperation(AbstractOperation):
                 'securitySchemes': component_get('securitySchemes'),
                 'responses': component_get('responses'),
                 'headers': component_get('headers'),
+                'examples': component_get('examples')
             }
         }
 
@@ -266,17 +268,18 @@ class OpenAPIOperation(AbstractOperation):
             code = 200
         try:
             # TODO also use example header?
-            return (list(deep_get(self._responses, examples_path).values())[0], code)
+            example_raw = self._resolve_reference(list(deep_get(self._responses, examples_path).values())[0])['value']
+            return self.api.json_loads(codecs.decode(example_raw, 'unicode-escape')), code
         except (KeyError, IndexError):
             pass
         try:
-            return (deep_get(self._responses, example_path), code)
+            return deep_get(self._responses, example_path), code
         except KeyError:
             pass
         try:
-            return (deep_get(self._responses, schema_example_path), code)
+            return deep_get(self._responses, schema_example_path), code
         except KeyError:
-            return (None, code)
+            return None, code
 
     def get_path_parameter_types(self):
         types = {}
@@ -369,7 +372,7 @@ class OpenAPIOperation(AbstractOperation):
         if is_nullable(query_defn) and is_null(value):
             return None
 
-        query_schema = query_defn["schema"]
+        query_schema = self._resolve_reference(query_defn["schema"])
 
         if query_schema["type"] == "array":
             return [make_type(part, query_schema["items"]["type"]) for part in value]
